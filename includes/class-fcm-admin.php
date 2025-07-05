@@ -1,4 +1,6 @@
 <?php
+if (!defined('ABSPATH')) exit;
+
 class FCM_Admin {
     public function __construct() {
         add_action('admin_menu', [$this, 'add_admin_menu']);
@@ -32,7 +34,7 @@ class FCM_Admin {
 
     public function enqueue_admin_assets($hook) {
         if (strpos($hook, 'fc-mistrzaki') === false) return;
-        wp_enqueue_script('fc-mistrzaki-admin-script', false, ['jquery'], '3.0.0', true);
+        wp_enqueue_script('fc-mistrzaki-admin-script', false, ['jquery'], '3.2.0', true);
         $script = "
             jQuery(document).ready(function($) {
                 $('#zawodnik-search').on('keyup', function() {
@@ -51,8 +53,10 @@ class FCM_Admin {
             #trening-calendar th { text-align: center; padding: 10px; background: #f7f7f7; }
             #trening-calendar td a { display: block; width: 100%; height: 100%; padding: 8px; box-sizing: border-box; text-decoration: none; color: #2271b1; }
             #trening-calendar td a:hover { background: #f0f6fc; }
-            #trening-calendar td.today { background-color: #fff9c4; }
-            #trening-calendar td.today strong { color: #c00; }
+            #trening-calendar td.today { background-color: #fff9c4; font-weight: bold; }
+            #trening-calendar td.past { background-color: #f1f1f1; }
+            #trening-calendar td.past a { color: #999; }
+            #trening-calendar td.trening { border: 2px solid #2271b1; font-weight: bold; }
             #trening-calendar td.pad { background-color: #f9f9f9; }
             .present { background-color: #dff0d8 !important; }
         ";

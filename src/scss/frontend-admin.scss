@@ -1,0 +1,30 @@
+// Plik: src/scss/frontend-admin.scss */
+
+// Style dla panelu admina na froncie (shortcode)
+
+.fcm-frontend-panel {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    max-width: 900px;
+    margin: 20px auto;
+
+    // Tutaj można skopiować lub zaimportować style z admin.scss, jeśli mają być takie same
+    // Na razie zostawiamy puste, aby pokazać, że to oddzielny plik
+
+  }
+  .calendar-wrap {
+      #trening-calendar {
+        tr {
+          td {
+                text-align: center;
+                font-size: 24px;
+                text-decoration: none;
+                a {
+                  color: #6E1A35;
+                  text-decoration: none;
+                }
+              }
+          }
+        }
+      }
+
+  

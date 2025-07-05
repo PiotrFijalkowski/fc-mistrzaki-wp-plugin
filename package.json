@@ -1,0 +1,24 @@
+{
+  "name": "fc-mistrzaki-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile:css": "sass src/scss:assets/css --style=compressed",
+    "watch:css": "sass src/scss:assets/css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiotrFijalkowski/fc-mistrzaki-wp-plugin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PiotrFijalkowski/fc-mistrzaki-wp-plugin/issues"
+  },
+  "homepage": "https://github.com/PiotrFijalkowski/fc-mistrzaki-wp-plugin#readme",
+  "devDependencies": {
+    "sass": "^1.89.2"
+  }
+}

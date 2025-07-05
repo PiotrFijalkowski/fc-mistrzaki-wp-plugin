@@ -31,4 +31,3 @@ $zawodnik = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}fcm_zawo
         <p>Nie znaleziono danych zawodnika.</p>
     <?php endif; ?>
 </div>
-

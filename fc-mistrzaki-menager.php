@@ -40,6 +40,8 @@ class FC_Mistrzaki_Manager_Main {
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-admin.php';
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-post-handlers.php';
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-shortcode.php';
+        require_once FCM_PLUGIN_PATH . 'includes/class-fcm-frontend-admin.php'; 
+
     }
 
     private function init_plugin() {
@@ -50,6 +52,8 @@ class FC_Mistrzaki_Manager_Main {
         new FCM_Admin();
         new FCM_Post_Handlers();
         new FCM_Shortcode();
+        new FCM_Frontend_Admin();
+
     }
 
     public function start_session() {

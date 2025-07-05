@@ -1,4 +1,6 @@
 <?php
+if (!defined('ABSPATH')) exit;
+
 class FCM_DB {
     public static function activate() {
         global $wpdb;

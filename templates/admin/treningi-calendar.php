@@ -2,6 +2,7 @@
 // Plik: templates/admin/treningi-calendar.php
 
 if (!defined('ABSPATH')) exit;
+global $wpdb;
 ?>
 <div class="wrap">
     <h1>Treningi</h1>
@@ -17,6 +18,16 @@ if (!defined('ABSPATH')) exit;
 
     $next_month = $date->modify('+1 month');
     $next_month_link = add_query_arg(['cal_month' => $next_month->format('m'), 'cal_year' => $next_month->format('Y')]);
+
+    $first_day_of_cal_month = $date->format('Y-m-01');
+    $last_day_of_cal_month = $date->format('Y-m-t');
+    $trening_days_raw = $wpdb->get_results($wpdb->prepare(
+        "SELECT DISTINCT data_treningu FROM {$wpdb->prefix}fcm_obecnosci WHERE data_treningu BETWEEN %s AND %s",
+        $first_day_of_cal_month,
+        $last_day_of_cal_month
+    ));
+    $trening_days = wp_list_pluck($trening_days_raw, 'data_treningu');
+    $today_dt = new DateTimeImmutable('today');
     ?>
     <div class="calendar-wrap">
         <div class="calendar-nav">
@@ -36,11 +47,22 @@ if (!defined('ABSPATH')) exit;
                 $current_date = $date->setDate($year, $month, $day);
                 $date_str = $current_date->format('Y-m-d');
                 $url = admin_url('admin.php?page=fc-mistrzaki&trening_date=' . $date_str);
-                $is_today = ($date_str == date('Y-m-d')) ? 'today' : '';
+                
+                $classes = [];
+                if ($current_date < $today_dt && $date_str !== $today_dt->format('Y-m-d')) {
+                    $classes[] = 'past';
+                }
+                if ($date_str === $today_dt->format('Y-m-d')) {
+                    $classes[] = 'today';
+                }
+                if (in_array($date_str, $trening_days)) {
+                    $classes[] = 'trening';
+                }
+                $class_string = implode(' ', $classes);
 
                 if (($day + $first_day_of_month - 2) % 7 == 0 && $day != 1) echo '</tr><tr>';
                 
-                echo "<td class='{$is_today}'><a href='" . esc_url($url) . "'><strong>" . $day . "</strong></a></td>";
+                echo "<td class='{$class_string}'><a href='" . esc_url($url) . "'><strong>" . $day . "</strong></a></td>";
             }
             
             $last_day_of_month = $date->modify('last day of this month')->format('N');
@@ -51,7 +73,6 @@ if (!defined('ABSPATH')) exit;
     </div>
     <?php
     // Stats summary
-    global $wpdb;
     $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
     $aktywni = $wpdb->get_var("SELECT COUNT(*) FROM $zawodnicy_table_name WHERE liczba_treningow > 0");
     $nieaktywni = $wpdb->get_var("SELECT COUNT(*) FROM $zawodnicy_table_name WHERE liczba_treningow = 0");
