@@ -71,3 +71,65 @@
       }
 
   
+
+      .fcm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none; // Domyślnie ukryty
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    &.is-visible {
+        display: flex; // Pokazujemy, gdy ma klasę
+    }
+}
+
+.fcm-modal-content {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.fcm-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+.fcm-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.fcm-modal-body {
+    .grupy-selection {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        a.button {
+            text-align: center;
+        }
+    }
+}

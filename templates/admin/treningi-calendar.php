@@ -46,7 +46,7 @@ global $wpdb;
             for ($day = 1; $day <= $days_in_month; $day++) {
                 $current_date = $date->setDate($year, $month, $day);
                 $date_str = $current_date->format('Y-m-d');
-                $url = admin_url('admin.php?page=fc-mistrzaki&trening_date=' . $date_str);
+                $url = add_query_arg('trening_date', $date_str);
                 
                 $classes = [];
                 if ($current_date < $today_dt && $date_str !== $today_dt->format('Y-m-d')) {

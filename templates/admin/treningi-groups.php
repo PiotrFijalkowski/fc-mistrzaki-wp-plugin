@@ -10,10 +10,10 @@ $date = sanitize_text_field($_GET['trening_date']);
         <?php
         $grupy = fcm_get_grupy_wiekowe();
         foreach ($grupy as $key => $label) {
-            $url = admin_url('admin.php?page=fc-mistrzaki&trening_date=' . $date . '&grupa=' . $key);
+            $url = add_query_arg('grupa', $key);
             echo '<a href="' . esc_url($url) . '" class="button button-primary">' . esc_html($label) . '</a>';
         }
         ?>
     </div>
-    <p style="margin-top:20px;"><a href="<?php echo admin_url('admin.php?page=fc-mistrzaki'); ?>">&laquo; Powrót do kalendarza</a></p>
+    <p style="margin-top:20px;"><a href="<?php echo esc_url(remove_query_arg(['trening_date', 'grupa', 'lokalizacja'])); ?>">&laquo; Powrót do kalendarza</a></p>
 </div>

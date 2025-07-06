@@ -73,15 +73,23 @@ class FCM_Post_Handlers {
             }
         }
         
-        $redirect_url = admin_url('admin.php?page=fc-mistrzaki');
+        // Pobieramy URL strony, z której wysłano formularz
+        $redirect_url = wp_get_referer();
+
+        // Jeśli z jakiegoś powodu referer jest pusty, ustawiamy domyślny URL admina
+        if (!$redirect_url) {
+            $redirect_url = admin_url('admin.php?page=fc-mistrzaki&trening_date=' . $data_treningu . '&grupa=' . sanitize_key($_POST['grupa']));
+        }
+
+        // Czyścimy stare parametry powiadomień, aby się nie dublowały
+        $redirect_url = remove_query_arg(['fcm_notice', 'saved_count'], $redirect_url);
+
+        // Dodajemy nowe parametry do URL powrotnego
         $redirect_url = add_query_arg([
-            'trening_date' => $data_treningu,
-            'grupa' => sanitize_key($_POST['grupa']),
-            'lokalizacja' => sanitize_key($_POST['lokalizacja']),
             'fcm_notice' => 'attendance_saved',
             'saved_count' => $changes_count
         ], $redirect_url);
-        
+
         wp_redirect($redirect_url);
         exit;
     }
