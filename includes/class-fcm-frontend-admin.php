@@ -7,21 +7,60 @@ class FCM_Frontend_Admin {
 
     public function __construct() {
         add_shortcode('fc_mistrzaki_admin_panel', [$this, 'render_shortcode']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
     }
 
-    public function enqueue_styles() {
-        // Dodajemy style tylko, gdy shortcode jest używany
-      if (is_a(get_post(), 'WP_Post') && has_shortcode(get_post()->post_content, 'fc_mistrzaki_admin_panel')) {
-              wp_enqueue_style(
-                  'fcm-frontend-admin-styles',
-                  FCM_PLUGIN_URL . 'assets/css/frontend-admin.css',
-                  [],
-                  '3.1.0'
-              );
-          }
-      }
+    /**
+     * Ładuje skrypty i style na stronach front-endowych.
+     */
+    public function enqueue_assets() {
+        global $post;
+        // Sprawdzamy, czy na stronie jest nasz shortcode, aby nie ładować zasobów niepotrzebnie.
+        if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'fc_mistrzaki_admin_panel')) {
+            
+            // Rejestrujemy i dodajemy nasz kod JavaScript.
+            wp_register_script(
+                'fcm-frontend-script', // Unikalna nazwa (handle)
+                false, // Brak pliku źródłowego, bo dodamy kod inline
+                ['jquery'], // Zależność od jQuery
+                '3.3.3', // Wersja
+                true // Ładuj w stopce
+            );
+            
+            $script = "
+                jQuery(document).ready(function($) {
+                    // Sprawia, że cała komórka kalendarza jest klikalna
+                    $('body').on('click', '#trening-calendar td:not(.pad)', function(e) {
+                        // Ignoruj kliknięcie, jeśli celem jest już sam link lub jego zawartość
+                        if ($(e.target).is('a') || $(e.target).closest('a').length) {
+                            return;
+                        }
+                        
+                        var link = $(this).find('a');
+                        if (link.length) {
+                            window.location.href = link.attr('href');
+                        }
+                    });
+                });
+            ";
+            wp_add_inline_script('fcm-frontend-script', $script);
 
+            // Ładujemy zewnętrzny arkusz stylów, kompilowany przez SASS.
+            wp_enqueue_style(
+                'fcm-frontend-styles',
+                FCM_PLUGIN_URL . 'assets/css/frontend-admin.css', // Prawidłowa ścieżka do pliku
+                [],
+                '3.2.1' // Wersja
+            );
+
+            // Prosimy WordPressa o załadowanie skryptu.
+            wp_enqueue_script('fcm-frontend-script');
+        }
+    }
+
+    /**
+     * Renderuje zawartość shortcode'u.
+     */
     public function render_shortcode() {
         ob_start();
 
@@ -30,7 +69,7 @@ class FCM_Frontend_Admin {
             $this->render_admin_panel();
         } else {
             // Użytkownik nie jest adminem lub nie jest zalogowany - pokazujemy formularz logowania
-            echo '<h3>Zaloguj się, aby uzyskać dostęp</h3>';
+            echo '<h3>Zaloguj się, aby uzyskać dostęp do panelu</h3>';
             wp_login_form(['redirect' => get_permalink()]);
         }
 

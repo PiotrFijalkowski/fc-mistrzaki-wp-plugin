@@ -13,16 +13,59 @@
   }
   .calendar-wrap {
       #trening-calendar {
+        tbody>tr:nth-child(odd) {
+          td {
+            background-color: #fff;
+          }
+        }
+         tbody tr:hover>td {
+          background-color: #fff;
+         }
+        .dayname-padding {
+          padding: 5px 0px;
+          background: #4d4d4d;
+          color: #fff;
+          font-weight: 800;
+        }
         tr {
           td {
                 text-align: center;
                 font-size: 24px;
                 text-decoration: none;
+                transition: 0.4s ease-in-out;
                 a {
                   color: #6E1A35;
                   text-decoration: none;
+                  transition: 0.4s ease-in-out;
+                  text-shadow: 4px 4px 11px rgba(66, 68, 90, 0.52);                }
+                &:hover {
+                  background-color: #6E1A35!important;
+                  color: #fff;
+                  a {
+                    color: #fff;
+                    transition: 0.4s ease-in-out;
+                  }
+                  transition: 0.4s ease-in-out;
                 }
               }
+              .pad {
+                pointer-events: none;
+              }
+          }
+          .past {
+            background-color: hsla(0, 0%, 50%, .34)!important;
+            opacity: 0.8;
+          }
+          .trening,
+          .past .trening {
+            background-color: #ffd2967e!important; 
+          }
+          .today {
+            background-color: #731933!important; 
+            a {
+              color: #fff;
+              font-weight: 900;
+            }
           }
         }
       }

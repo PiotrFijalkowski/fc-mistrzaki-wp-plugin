@@ -36,7 +36,7 @@ global $wpdb;
             <a href="<?php echo esc_url($next_month_link); ?>" class="button">Następny &raquo;</a>
         </div>
         <table class="wp-list-table widefat fixed striped" id="trening-calendar">
-            <thead><tr><th>Pon</th><th>Wt</th><th>Śr</th><th>Czw</th><th>Pt</th><th>Sob</th><th>Ndz</th></tr></thead>
+            <thead><tr><th class="dayname-padding">Pon</th><th class="dayname-padding">Wt</th><th class="dayname-padding">Śr</th><th class="dayname-padding">Czw</th><th class="dayname-padding">Pt</th><th class="dayname-padding">Sob</th><th class="dayname-padding">Ndz</th></tr></thead>
             <tbody><tr>
             <?php
             $first_day_of_month = $date->format('N');

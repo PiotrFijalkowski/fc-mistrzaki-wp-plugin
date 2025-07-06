@@ -1,1 +1,59 @@
-.fcm-frontend-panel{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;max-width:900px;margin:20px auto}.calendar-wrap #trening-calendar tr td{text-align:center;font-size:24px;text-decoration:none}.calendar-wrap #trening-calendar tr td a{color:#6e1a35;text-decoration:none}/*# sourceMappingURL=frontend-admin.css.map */
+.fcm-frontend-panel {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.calendar-wrap #trening-calendar tbody > tr:nth-child(odd) td {
+  background-color: #fff;
+}
+.calendar-wrap #trening-calendar tbody tr:hover > td {
+  background-color: #fff;
+}
+.calendar-wrap #trening-calendar .dayname-padding {
+  padding: 5px 0px;
+  background: #4d4d4d;
+  color: #fff;
+  font-weight: 800;
+}
+.calendar-wrap #trening-calendar tr td {
+  text-align: center;
+  font-size: 24px;
+  text-decoration: none;
+  transition: 0.4s ease-in-out;
+}
+.calendar-wrap #trening-calendar tr td a {
+  color: #6E1A35;
+  text-decoration: none;
+  transition: 0.4s ease-in-out;
+  text-shadow: 4px 4px 11px rgba(66, 68, 90, 0.52);
+}
+.calendar-wrap #trening-calendar tr td:hover {
+  background-color: #6E1A35 !important;
+  color: #fff;
+  transition: 0.4s ease-in-out;
+}
+.calendar-wrap #trening-calendar tr td:hover a {
+  color: #fff;
+  transition: 0.4s ease-in-out;
+}
+.calendar-wrap #trening-calendar tr .pad {
+  pointer-events: none;
+}
+.calendar-wrap #trening-calendar .past {
+  background-color: hsla(0, 0%, 50%, 0.34) !important;
+  opacity: 0.8;
+}
+.calendar-wrap #trening-calendar .trening,
+.calendar-wrap #trening-calendar .past .trening {
+  background-color: rgba(255, 210, 150, 0.4941176471) !important;
+}
+.calendar-wrap #trening-calendar .today {
+  background-color: #731933 !important;
+}
+.calendar-wrap #trening-calendar .today a {
+  color: #fff;
+  font-weight: 900;
+}
+
+/*# sourceMappingURL=frontend-admin.css.map */

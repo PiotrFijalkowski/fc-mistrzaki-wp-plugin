@@ -35,14 +35,28 @@ class FCM_Admin {
     public function enqueue_admin_assets($hook) {
         if (strpos($hook, 'fc-mistrzaki') === false) return;
         wp_enqueue_script('fc-mistrzaki-admin-script', false, ['jquery'], '3.2.0', true);
-        $script = "
-            jQuery(document).ready(function($) {
-                $('#zawodnik-search').on('keyup', function() {
-                    var value = $(this).val().toLowerCase();
-                    $('#zawodnicy-table tbody tr').filter(function() { $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+            $script = "
+                jQuery(document).ready(function($) {
+                    // Wyszukiwarka zawodników
+                    $('#zawodnik-search').on('keyup', function() {
+                        var value = $(this).val().toLowerCase();
+                        $('#zawodnicy-table tbody tr').filter(function() { 
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) 
+                        });
+                    });
+
+                    // Sprawia, że cała komórka kalendarza jest klikalna
+                    $('#trening-calendar td:not(.pad)').on('click', function(e) {
+                        // Upewnij się, że nie kliknięto już na link w środku
+                        if (e.target.tagName !== 'A' && e.target.tagName !== 'STRONG') {
+                            var link = $(this).find('a');
+                            if (link.length) {
+                                window.location.href = link.attr('href');
+                            }
+                        }
+                    });
                 });
-            });
-        ";
+            ";
         wp_add_inline_script('fc-mistrzaki-admin-script', $script);
         $calendar_styles = "
             .calendar-wrap { max-width: 900px; margin: 20px auto; }
@@ -59,6 +73,7 @@ class FCM_Admin {
             #trening-calendar td.trening { border: 2px solid #2271b1; font-weight: bold; }
             #trening-calendar td.pad { background-color: #f9f9f9; }
             .present { background-color: #dff0d8 !important; }
+            #trening-calendar td:not(.pad) { cursor: pointer; }
         ";
         wp_add_inline_style('fc-mistrzaki-admin-script', $calendar_styles);
     }
