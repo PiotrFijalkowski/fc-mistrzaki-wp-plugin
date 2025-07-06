@@ -4,7 +4,7 @@
 if (!defined('ABSPATH')) exit;
 $date = sanitize_text_field($_GET['trening_date']);
 ?>
-<div class="wrap">
+<div class="wrap m100">
     <h1>Wybierz grupę na dzień <?php echo date_i18n('d.m.Y', strtotime($date)); ?></h1>
     <div class="grupy-selection" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
         <?php

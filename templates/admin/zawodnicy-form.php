@@ -9,7 +9,7 @@ if ($zawodnik_id > 0) {
     $zawodnik = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}fcm_zawodnicy WHERE id = %d", $zawodnik_id));
 }
 ?>
-<div class="wrap">
+<div class="wrap m100">
     <h1><?php echo $zawodnik ? 'Edytuj zawodnika' : 'Dodaj nowego zawodnika'; ?></h1>
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <input type="hidden" name="action" value="fcm_add_edit_zawodnik">

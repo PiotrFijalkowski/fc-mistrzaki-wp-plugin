@@ -10,7 +10,7 @@ $grupa_label = fcm_get_grupy_wiekowe()[$grupa_key] ?? 'Nieznana grupa';
 $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
 $obecnosci_table_name = $wpdb->prefix . 'fcm_obecnosci';
 ?>
-<div class="wrap">
+<div class="wrap m100">
     <h2>Lista obecności - <?php echo esc_html(date_i18n('d.m.Y', strtotime($date))) . ' - ' . esc_html($grupa_label); ?></h2>
     <p><a href="<?php echo esc_url(remove_query_arg(['grupa', 'lokalizacja'])); ?>">&laquo; Powrót do wyboru grupy</a></p>
     

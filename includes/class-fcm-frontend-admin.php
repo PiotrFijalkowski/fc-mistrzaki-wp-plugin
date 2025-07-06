@@ -10,65 +10,82 @@ class FCM_Frontend_Admin {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
     }
 
-    /**
-     * Ładuje skrypty i style na stronach front-endowych.
-     */
     public function enqueue_assets() {
         global $post;
-        // Sprawdzamy, czy na stronie jest nasz shortcode, aby nie ładować zasobów niepotrzebnie.
         if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'fc_mistrzaki_admin_panel')) {
             
-            // Rejestrujemy i dodajemy nasz kod JavaScript.
-            wp_register_script(
-                'fcm-frontend-script', // Unikalna nazwa (handle)
-                false, // Brak pliku źródłowego, bo dodamy kod inline
-                ['jquery'], // Zależność od jQuery
-                '3.3.3', // Wersja
-                true // Ładuj w stopce
-            );
+            wp_register_script('fcm-frontend-script', false, ['jquery'], '3.4.0', true);
             
+            // Przekazujemy dane z PHP do JavaScript
+            $grupy_wiekowe = fcm_get_grupy_wiekowe();
+            wp_localize_script('fcm-frontend-script', 'fcm_data', ['grupy' => $grupy_wiekowe]);
+
             $script = "
                 jQuery(document).ready(function($) {
-                    // Sprawia, że cała komórka kalendarza jest klikalna
+                    const modal = $('#fcm-group-modal');
+                    const modalTitle = $('#fcm-modal-title');
+                    const modalGroupsContainer = $('#fcm-modal-groups');
+                    const closeModalBtn = $('#fcm-modal-close-btn');
+
+                    // Logika otwierania okna
                     $('body').on('click', '#trening-calendar td:not(.pad)', function(e) {
-                        // Ignoruj kliknięcie, jeśli celem jest już sam link lub jego zawartość
-                        if ($(e.target).is('a') || $(e.target).closest('a').length) {
-                            return;
-                        }
-                        
-                        var link = $(this).find('a');
-                        if (link.length) {
-                            window.location.href = link.attr('href');
+                        e.preventDefault(); 
+
+                        const cell = $(this);
+                        const date = cell.data('date');
+                        const formattedDate = cell.data('date-formatted');
+
+                        modalTitle.text('Wybierz grupę na ' + formattedDate);
+
+                        modalGroupsContainer.empty();
+                        const baseUrl = new URL(window.location.href);
+                        baseUrl.searchParams.set('trening_date', date);
+
+                        $.each(fcm_data.grupy, function(key, label) {
+                            const groupUrl = new URL(baseUrl.toString());
+                            groupUrl.searchParams.set('grupa', key);
+                            const button = $('<a></a>')
+                                .attr('href', groupUrl.toString())
+                                .addClass('button button-primary')
+                                .text(label);
+                            modalGroupsContainer.append(button);
+                        });
+
+                        modal.addClass('is-visible');
+                    });
+
+                    // Logika zamykania okna
+                    function closeModal() {
+                        modal.removeClass('is-visible');
+                    }
+
+                    closeModalBtn.on('click', closeModal);
+                    modal.on('click', function(e) {
+                        if ($(e.target).is(modal)) {
+                            closeModal();
                         }
                     });
                 });
             ";
             wp_add_inline_script('fcm-frontend-script', $script);
 
-            // Ładujemy zewnętrzny arkusz stylów, kompilowany przez SASS.
             wp_enqueue_style(
                 'fcm-frontend-styles',
-                FCM_PLUGIN_URL . 'assets/css/frontend-admin.css', // Prawidłowa ścieżka do pliku
+                FCM_PLUGIN_URL . 'assets/css/frontend-admin.css',
                 [],
-                '3.2.1' // Wersja
+                '3.2.1'
             );
 
-            // Prosimy WordPressa o załadowanie skryptu.
             wp_enqueue_script('fcm-frontend-script');
         }
     }
 
-    /**
-     * Renderuje zawartość shortcode'u.
-     */
     public function render_shortcode() {
         ob_start();
 
         if (current_user_can('manage_options')) {
-            // Użytkownik jest adminem - pokazujemy panel
             $this->render_admin_panel();
         } else {
-            // Użytkownik nie jest adminem lub nie jest zalogowany - pokazujemy formularz logowania
             echo '<h3>Zaloguj się, aby uzyskać dostęp do panelu</h3>';
             wp_login_form(['redirect' => get_permalink()]);
         }
@@ -77,10 +94,10 @@ class FCM_Frontend_Admin {
     }
 
     private function render_admin_panel() {
-        // Ta logika jest podobna do tej z FCM_Admin, ale dostosowana do frontu
         if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
             include FCM_PLUGIN_PATH . 'templates/admin/treningi-attendance.php';
         } elseif (isset($_GET['trening_date'])) {
+            // Ten widok jest teraz zastąpiony przez modal, ale zostaje jako fallback
             include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
         } else {
              include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';

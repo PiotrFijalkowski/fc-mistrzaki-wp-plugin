@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 global $wpdb;
 $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
 ?>
-<div class="wrap">
+<div class="wrap m100">
     <h1>Lista Zawodników</h1>
     <?php fcm_display_notices(); ?>
 
