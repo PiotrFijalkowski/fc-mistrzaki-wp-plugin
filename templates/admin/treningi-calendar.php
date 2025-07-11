@@ -4,7 +4,7 @@
 if (!defined('ABSPATH')) exit;
 global $wpdb;
 ?>
-<div class="wrap m100">
+<div class="wrap">
     <h1>Treningi</h1>
     <?php fcm_display_notices(); ?>
     <?php
@@ -29,7 +29,7 @@ global $wpdb;
     $trening_days = wp_list_pluck($trening_days_raw, 'data_treningu');
     $today_dt = new DateTimeImmutable('today');
     ?>
-    <div class="calendar-wrap m100">
+    <div class="calendar-wrap">
         <div class="calendar-nav">
             <div class="d-flex justify-content-between align-items-center next-prev">
                 <a href="<?php echo esc_url($prev_month_link); ?>" class="button">&laquo; Poprzedni</a>
@@ -97,7 +97,7 @@ global $wpdb;
     $aktywni = $wpdb->get_var("SELECT COUNT(*) FROM $zawodnicy_table_name WHERE liczba_treningow > 0");
     $nieaktywni = $wpdb->get_var("SELECT COUNT(*) FROM $zawodnicy_table_name WHERE liczba_treningow = 0");
     ?>
-    <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
+    <div class="fcm-summary-card">
         <h3>Podsumowanie</h3>
         <p><strong>Liczba zawodników z aktywnymi treningami:</strong> <?php echo intval($aktywni); ?></p>
         <p><strong>Liczba zawodników z nieaktywnymi treningami:</strong> <?php echo intval($nieaktywni); ?></p>

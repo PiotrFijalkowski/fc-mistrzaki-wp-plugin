@@ -6,6 +6,8 @@ class FCM_DB {
         global $wpdb;
         $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
         $obecnosci_table_name = $wpdb->prefix . 'fcm_obecnosci';
+        $rodzice_table_name = $wpdb->prefix . 'fcm_rodzice';
+        $powiazania_table_name = $wpdb->prefix . 'fcm_powiazania';
         $charset_collate = $wpdb->get_charset_collate();
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -28,6 +30,36 @@ class FCM_DB {
             UNIQUE KEY obecnosc (zawodnik_id,data_treningu)
         ) $charset_collate;";
         dbDelta($sql_obecnosci);
+
+        $sql_rodzice = "CREATE TABLE $rodzice_table_name (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            email varchar(100) NOT NULL,
+            password varchar(255) NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY email (email)
+        ) $charset_collate;";
+        dbDelta($sql_rodzice);
+
+        $sql_powiazania = "CREATE TABLE $powiazania_table_name (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            rodzic_id mediumint(9) NOT NULL,
+            zawodnik_id mediumint(9) NOT NULL,
+            status varchar(20) NOT NULL DEFAULT 'oczekujace',
+            PRIMARY KEY  (id),
+            UNIQUE KEY powiazanie (rodzic_id,zawodnik_id)
+        ) $charset_collate;";
+        dbDelta($sql_powiazania);
+
+        $sql_harmonogram = "CREATE TABLE {$wpdb->prefix}fcm_harmonogram (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            grupa_wiekowa varchar(55) NOT NULL,
+            lokalizacja varchar(100) NOT NULL,
+            dzien_tygodnia varchar(20) NOT NULL,
+            godzina time NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY unikalny_trening (grupa_wiekowa, lokalizacja, dzien_tygodnia, godzina)
+        ) $charset_collate;";
+        dbDelta($sql_harmonogram);
 
         $is_empty = $wpdb->get_var("SELECT COUNT(*) FROM $zawodnicy_table_name") == 0;
         if ($is_empty) {

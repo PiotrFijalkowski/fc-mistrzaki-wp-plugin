@@ -1,5 +1,5 @@
 <?php
-// Plik: templates/admin/zawodnicy-list.php
+// Plik: templates/frontend/trainer-players-list.php
 
 if (!defined('ABSPATH')) exit;
 global $wpdb;
@@ -16,21 +16,21 @@ $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
         ?>
         <div class="filter-row">
             <strong>Grupa:</strong>
-            <a href="<?php echo remove_query_arg('filter_grupa'); ?>" class="button <?php echo empty($filter_grupa) ? 'button-primary' : ''; ?>">Wszystkie</a>
+            <a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'players', 'filter_grupa' => false])); ?>" class="button <?php echo empty($filter_grupa) ? 'button-primary' : ''; ?>">Wszystkie</a>
             <?php foreach(fcm_get_grupy_wiekowe() as $key => $label): ?>
-                <a href="<?php echo add_query_arg('filter_grupa', $key); ?>" class="button <?php echo ($filter_grupa == $key) ? 'button-primary' : ''; ?>"><?php echo esc_html($label); ?></a>
+                <a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'players', 'filter_grupa' => $key])); ?>" class="button <?php echo ($filter_grupa == $key) ? 'button-primary' : ''; ?>"><?php echo esc_html($label); ?></a>
             <?php endforeach; ?>
         </div>
         <div class="filter-row">
             <strong>Lokalizacja:</strong>
-            <a href="<?php echo remove_query_arg('filter_lokalizacja'); ?>" class="button <?php echo empty($filter_lokalizacja) ? 'button-primary' : ''; ?>">Wszystkie</a>
+            <a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'players', 'filter_lokalizacja' => false])); ?>" class="button <?php echo empty($filter_lokalizacja) ? 'button-primary' : ''; ?>">Wszystkie</a>
             <?php foreach(fcm_get_lokalizacje() as $key => $label): ?>
-                <a href="<?php echo add_query_arg('filter_lokalizacja', $key); ?>" class="button <?php echo ($filter_lokalizacja == $key) ? 'button-primary' : ''; ?>"><?php echo esc_html($label); ?></a>
+                <a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'players', 'filter_lokalizacja' => $key])); ?>" class="button <?php echo ($filter_lokalizacja == $key) ? 'button-primary' : ''; ?>"><?php echo esc_html($label); ?></a>
             <?php endforeach; ?>
         </div>
     </div>
 
-    <a href="<?php echo admin_url('admin.php?page=fc-mistrzaki-zawodnicy&action=add'); ?>" class="page-title-action button button-primary">Dodaj nowego</a>
+    <a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'players', 'player_action' => 'add'])); ?>" class="page-title-action button button-primary">Dodaj nowego</a>
     <input type="text" id="zawodnik-search" placeholder="Wyszukaj zawodnika..." class="fcm-form-control" style="float: right;">
     <table class="wp-list-table widefat fixed striped" id="zawodnicy-table">
         <thead><tr><th>ID</th><th>Imię i Nazwisko</th><th>Lokalizacja</th><th>Grupa</th><th>Pozostało treningów</th><th>Akcje</th></tr></thead>
@@ -70,7 +70,7 @@ $zawodnicy_table_name = $wpdb->prefix . 'fcm_zawodnicy';
                     echo '<td>' . esc_html(fcm_get_lokalizacje()[$zawodnik->lokalizacja] ?? 'Brak') . '</td>';
                     echo '<td>' . esc_html(fcm_get_grupy_wiekowe()[$zawodnik->grupa_wiekowa] ?? 'Brak') . '</td>';
                     echo '<td class="treningi-count">' . $treningi . '</td>';
-                    echo '<td><a href="' . admin_url('admin.php?page=fc-mistrzaki-zawodnicy&action=edit&id=' . $zawodnik->id) . '" class="button">Edytuj</a> ';
+                    echo '<td><a href="' . esc_url(add_query_arg(['fcm_action' => 'players', 'player_action' => 'edit', 'id' => $zawodnik->id])) . '" class="button">Edytuj</a> ';
                     echo '<a href="' . esc_url($delete_url) . '" class="button button-danger" onclick="return confirm(\'Czy na pewno chcesz usunąć tego zawodnika?\');">Usuń</a></td>';
                     echo '</tr>';
                 }

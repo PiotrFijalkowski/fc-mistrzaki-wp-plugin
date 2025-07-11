@@ -77,6 +77,15 @@ class FCM_Frontend_Admin {
             );
 
             wp_enqueue_script('fcm-frontend-script');
+
+            // Enqueue new frontend-panel.js for player panel navigation
+            wp_enqueue_script(
+                'fcm-player-panel-script',
+                FCM_PLUGIN_URL . 'assets/js/frontend-panel.js',
+                ['jquery'], // Depends on jQuery
+                '1.0.0', // Version
+                true // Load in footer
+            );
         }
     }
 
@@ -94,13 +103,46 @@ class FCM_Frontend_Admin {
     }
 
     private function render_admin_panel() {
-        if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
-            include FCM_PLUGIN_PATH . 'templates/admin/treningi-attendance.php';
-        } elseif (isset($_GET['trening_date'])) {
-            // Ten widok jest teraz zastąpiony przez modal, ale zostaje jako fallback
-            include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
-        } else {
-             include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';
+        $current_action = $_GET['fcm_action'] ?? 'calendar'; // Domyślna akcja to kalendarz
+        ?>
+        <div class="fcm-frontend-admin-tabs">
+            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'calendar')); ?>" class="button <?php echo ($current_action === 'calendar') ? 'button-primary' : ''; ?>">Kalendarz Treningów</a>
+            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'schedule')); ?>" class="button <?php echo ($current_action === 'schedule') ? 'button-primary' : ''; ?>">Harmonogram Zajęć</a>
+            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'attendance')); ?>" class="button <?php echo ($current_action === 'attendance') ? 'button-primary' : ''; ?>">Zarządzanie Obecnością</a>
+            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'players')); ?>" class="button <?php echo ($current_action === 'players') ? 'button-primary' : ''; ?>">Zarządzanie Zawodnikami</a>
+        </div>
+        <?php
+        switch ($current_action) {
+            case 'schedule':
+                include FCM_PLUGIN_PATH . 'templates/frontend/trainer-schedule.php';
+                break;
+            case 'attendance':
+                if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
+                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-attendance.php';
+                } elseif (isset($_GET['trening_date'])) {
+                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
+                } else {
+                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';
+                }
+                break;
+            case 'players':
+                $player_action = $_GET['player_action'] ?? 'list';
+                if ($player_action === 'edit' || $player_action === 'add') {
+                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-player-form.php';
+                } else {
+                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-players-list.php';
+                }
+                break;
+            case 'calendar':
+            default:
+                if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
+                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-attendance.php';
+                } elseif (isset($_GET['trening_date'])) {
+                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
+                } else {
+                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';
+                }
+                break;
         }
     }
 }

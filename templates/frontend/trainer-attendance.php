@@ -1,5 +1,5 @@
 <?php
-// Plik: templates/admin/treningi-attendance.php
+// Plik: templates/frontend/trainer-attendance.php
 
 if (!defined('ABSPATH')) exit;
 global $wpdb;
@@ -12,11 +12,11 @@ $obecnosci_table_name = $wpdb->prefix . 'fcm_obecnosci';
 ?>
 <div class="wrap">
     <h2>Lista obecności - <?php echo esc_html(date_i18n('d.m.Y', strtotime($date))) . ' - ' . esc_html($grupa_label); ?></h2>
-    <p><a href="<?php echo esc_url(remove_query_arg(['grupa', 'lokalizacja'])); ?>" class="button">&laquo; Powrót do wyboru grupy</a></p>
+    <p><a href="<?php echo esc_url(add_query_arg(['fcm_action' => 'attendance', 'trening_date' => $date, 'grupa' => false, 'lokalizacja' => false])); ?>" class="button">&laquo; Powrót do wyboru grupy</a></p>
     
     <div class="lokalizacja-selection">
         <?php
-        $base_url = add_query_arg(['trening_date' => $date, 'grupa' => $grupa_key]);
+        $base_url = add_query_arg(['fcm_action' => 'attendance', 'trening_date' => $date, 'grupa' => $grupa_key]);
         echo '<a href="' . esc_url($base_url) . '" class="button ' . (empty($lokalizacja_key) ? 'button-primary' : '') . '">Wszystkie</a>';
         foreach (fcm_get_lokalizacje() as $key => $label) {
             $url = add_query_arg('lokalizacja', $key, $base_url);

@@ -1,0 +1,26 @@
+// src/scss/_variables.scss
+
+// Colors (inferred from Dribbble design)
+$primary-color: #2C2F4F; // Dark blue/purple
+$secondary-color: #5A67D8; // Lighter blue/purple
+$accent-color: #FFC107; // Orange/yellow
+$text-color: #343A40; // Dark grey
+$light-text-color: #6C757D; // Light grey
+$background-color: #F8F9FA; // Very light grey
+$card-background: #FFFFFF; // White
+$border-color: #E9ECEF; // Light grey
+$success-color: #2ecc71; // Keep existing for now
+$error-color: #e74c3c; // Keep existing for now
+
+// Typography
+$font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; // Consider changing to 'Inter' or 'Plus Jakarta Sans' if available
+$font-family-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; // Can be different if needed
+
+$font-size-base: 15px;
+$font-size-small: 13px;
+$font-size-large: 18px;
+
+// Spacing
+$spacing-unit: 15px;
+$border-radius: 12px; // Increased for softer look
+$box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); // Softer, more prominent shadow

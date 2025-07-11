@@ -11,6 +11,30 @@ class FCM_Admin {
         add_menu_page('FC Mistrzaki', 'FC Mistrzaki', 'manage_options', 'fc-mistrzaki', [$this, 'render_treningi_page'], 'dashicons-groups', 6);
         add_submenu_page('fc-mistrzaki', 'Treningi', 'Treningi', 'manage_options', 'fc-mistrzaki', [$this, 'render_treningi_page']);
         add_submenu_page('fc-mistrzaki', 'Zawodnicy', 'Zawodnicy', 'manage_options', 'fc-mistrzaki-zawodnicy', [$this, 'render_zawodnicy_page']);
+        add_submenu_page('fc-mistrzaki', 'Rodzice', 'Rodzice', 'manage_options', 'fc-mistrzaki-rodzice', [$this, 'render_rodzice_page']);
+        add_submenu_page('fc-mistrzaki', 'Ogłoszenia', 'Ogłoszenia', 'manage_options', 'fc-mistrzaki-announcements', [$this, 'render_announcements_page']);
+        add_submenu_page('fc-mistrzaki', 'Harmonogram Zajęć', 'Harmonogram Zajęć', 'manage_options', 'fc-mistrzaki-schedule', [$this, 'render_schedule_page']);
+    }
+
+    public function render_schedule_page() {
+        include FCM_PLUGIN_PATH . 'templates/admin/schedule.php';
+    }
+
+    public function render_announcements_page() {
+        include FCM_PLUGIN_PATH . 'templates/admin/announcements.php';
+    }
+
+    public function render_rodzice_page() {
+        $action = $_GET['action'] ?? 'list';
+        if ($action === 'pending') {
+            include FCM_PLUGIN_PATH . 'templates/admin/rodzice-pending.php';
+        } elseif ($action === 'assign') {
+            include FCM_PLUGIN_PATH . 'templates/admin/rodzice-assign.php';
+        } elseif ($action === 'edit') {
+            include FCM_PLUGIN_PATH . 'templates/admin/rodzice-edit.php';
+        } else {
+            include FCM_PLUGIN_PATH . 'templates/admin/rodzice-list.php';
+        }
     }
 
     public function render_zawodnicy_page() {
@@ -34,30 +58,13 @@ class FCM_Admin {
 
     public function enqueue_admin_assets($hook) {
         if (strpos($hook, 'fc-mistrzaki') === false) return;
-        wp_enqueue_script('fc-mistrzaki-admin-script', false, ['jquery'], '3.2.0', true);
-            $script = "
-                jQuery(document).ready(function($) {
-                    // Wyszukiwarka zawodników
-                    $('#zawodnik-search').on('keyup', function() {
-                        var value = $(this).val().toLowerCase();
-                        $('#zawodnicy-table tbody tr').filter(function() { 
-                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) 
-                        });
-                    });
 
-                    // Sprawia, że cała komórka kalendarza jest klikalna
-                    $('#trening-calendar td:not(.pad)').on('click', function(e) {
-                        // Upewnij się, że nie kliknięto już na link w środku
-                        if (e.target.tagName !== 'A' && e.target.tagName !== 'STRONG') {
-                            var link = $(this).find('a');
-                            if (link.length) {
-                                window.location.href = link.attr('href');
-                            }
-                        }
-                    });
-                });
-            ";
-        wp_add_inline_script('fc-mistrzaki-admin-script', $script);
+        // Enqueue Select2 assets
+        wp_enqueue_style('select2', FCM_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.0.13');
+        wp_enqueue_script('select2', FCM_PLUGIN_URL . 'assets/js/select2/select2.min.js', ['jquery'], '4.0.13', true);
+
+        wp_enqueue_script('fc-mistrzaki-admin-script', FCM_PLUGIN_URL . 'assets/js/admin.js', ['jquery'], '3.2.0', true);
+        wp_enqueue_script('fcm-admin-select2-script', FCM_PLUGIN_URL . 'assets/js/admin-select2.js', ['jquery', 'select2'], '1.0.0', true);
         $calendar_styles = "
             .calendar-wrap { max-width: 900px; margin: 20px auto; }
             .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }

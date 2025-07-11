@@ -1,6 +1,140 @@
+@use 'sass:math';
+@use 'sass:color';
+@import 'variables';
+
 /* Plik: src/scss/admin.scss */
 
 // Style dla panelu admina (kokpit WordPress)
+
+body {
+    font-family: $font-family-base;
+    color: $text-color;
+    background-color: $background-color;
+}
+
+.wrap {
+    background-color: $card-background;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    padding: $spacing-unit * 2;
+    margin-top: $spacing-unit * 2;
+}
+
+h1 {
+    color: $secondary-color;
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: math.div($spacing-unit, 2);
+    margin-bottom: $spacing-unit * 1.5;
+    font-size: $font-size-large + 6px;
+}
+
+h2 {
+    color: $secondary-color;
+    margin-top: $spacing-unit * 1.5;
+    margin-bottom: $spacing-unit;
+    font-size: $font-size-large;
+}
+
+.form-table {
+    th {
+        font-weight: bold;
+        color: $light-text-color;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="time"],
+    select,
+    textarea {
+        width: 100%;
+        padding: math.div($spacing-unit, 1.2);
+        border: 1px solid $border-color;
+        border-radius: math.div($border-radius, 2);
+
+        &:focus {
+            outline: none;
+            border-color: color.adjust($primary-color, $lightness: 15%);
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+    }
+}
+
+.button {
+    background-color: $primary-color;
+    color: #ffffff;
+    padding: math.div($spacing-unit, 1.2) $spacing-unit;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darken($primary-color, 10%);
+    }
+
+    &-primary {
+        background-color: $primary-color;
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+
+    &-danger {
+        background-color: $error-color;
+        &:hover {
+            background-color: darken($error-color, 10%);
+        }
+    }
+}
+
+.wp-list-table {
+    border-radius: $border-radius;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    th,
+    td {
+        border-bottom: 1px solid $border-color;
+        padding: $spacing-unit / 1.2;
+    }
+
+    th {
+        background-color: $primary-color;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: $font-size-base - 1px;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: lighten($background-color, 2%);
+    }
+
+    tbody tr:hover {
+        background-color: lighten($primary-color, 35%);
+    }
+
+    td {
+        font-size: $font-size-base;
+        color: $light-text-color;
+    }
+}
+
+.notice {
+    border-radius: $border-radius / 2;
+    padding: $spacing-unit / 2 $spacing-unit;
+    margin-bottom: $spacing-unit;
+
+    &-success {
+        background-color: lighten($success-color, 40%);
+        border-left-color: $success-color;
+        color: darken($success-color, 20%);
+    }
+
+    &-error {
+        background-color: lighten($error-color, 40%);
+        border-left-color: $error-color;
+        color: darken($error-color, 20%);
+    }
+}
 
 .calendar-wrap {
     max-width: 900px;
@@ -67,4 +201,119 @@
 
 .present {
     background-color: #dff0d8 !important;
+}
+
+.zawodnicy-filters {
+    margin-bottom: $spacing-unit * 1.5;
+
+    .filter-row {
+        margin-bottom: $spacing-unit / 2;
+        display: flex;
+        gap: $spacing-unit / 2;
+        flex-wrap: wrap;
+        align-items: center;
+
+        strong {
+            color: $secondary-color;
+            font-size: $font-size-base;
+        }
+
+        .button {
+            padding: $spacing-unit / 2 $spacing-unit;
+            font-size: $font-size-small;
+            border-radius: $border-radius / 2;
+            background-color: lighten($primary-color, 20%);
+            color: #fff;
+
+            &.button-primary {
+                background-color: $primary-color;
+            }
+
+            &:hover {
+                background-color: darken($primary-color, 5%);
+            }
+        }
+    }
+}
+
+#zawodnik-search {
+    margin-bottom: $spacing-unit * 1.5;
+    width: 100%;
+    max-width: 400px;
+    padding: $spacing-unit / 1.2;
+    border: 1px solid $border-color;
+    border-radius: $border-radius / 2;
+    font-size: $font-size-base;
+    box-sizing: border-box;
+}
+
+.page-title-action {
+    margin-bottom: $spacing-unit * 1.5;
+}
+
+.treningi-count {
+    font-weight: bold;
+
+    &[style*="background-color: #fcf8e3"] {
+        color: orange;
+    }
+    &[style*="background-color: #f2dede"] {
+        color: red;
+    }
+    &[style*="background-color: #f0f0f0"] {
+        color: grey;
+    }
+}
+
+.lokalizacja-selection {
+    margin-bottom: $spacing-unit * 1.5;
+    display: flex;
+    gap: $spacing-unit / 2;
+    flex-wrap: wrap;
+
+    .button {
+        padding: $spacing-unit / 2 $spacing-unit;
+        font-size: $font-size-small;
+        border-radius: $border-radius / 2;
+        background-color: lighten($primary-color, 20%);
+        color: #fff;
+
+        &.button-primary {
+            background-color: $primary-color;
+        }
+
+        &:hover {
+            background-color: darken($primary-color, 5%);
+        }
+    }
+}
+
+.fcm-frontend-admin-tabs {
+    display: flex;
+    margin-bottom: $spacing-unit * 1.5;
+    border-bottom: 1px solid $border-color;
+
+    .button {
+        flex: 1;
+        padding: $spacing-unit / 1.2 $spacing-unit;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: $font-size-large;
+        color: $light-text-color;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        text-align: center;
+
+        &:hover {
+            color: $primary-color;
+        }
+
+        &.button-primary {
+            color: $primary-color;
+            border-bottom-color: $primary-color;
+            font-weight: bold;
+            background-color: transparent; // Override default button background
+        }
+    }
 }

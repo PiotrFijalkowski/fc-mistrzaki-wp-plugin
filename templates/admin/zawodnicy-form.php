@@ -54,6 +54,29 @@ if ($zawodnik_id > 0) {
                 <th scope="row"><label for="liczba_treningow">Liczba treningów</label></th>
                 <td><input type="number" id="liczba_treningow" name="liczba_treningow" value="<?php echo esc_attr($zawodnik->liczba_treningow ?? 10); ?>" class="regular-text" min="0"></td>
             </tr>
+            <tr>
+                <th scope="row"><label for="parent_id">Przypisany Rodzic</label></th>
+                <td>
+                    <select name="parent_id" id="parent_id">
+                        <option value="0">-- Brak --</option>
+                        <?php
+                        $rodzice_table = $wpdb->prefix . 'fcm_rodzice';
+                        $powiazania_table = $wpdb->prefix . 'fcm_powiazania';
+                        $all_parents = $wpdb->get_results("SELECT id, email FROM $rodzice_table");
+                        $current_parent_id = 0;
+                        if ($zawodnik_id > 0) {
+                            $current_parent = $wpdb->get_row($wpdb->prepare("SELECT rodzic_id FROM $powiazania_table WHERE zawodnik_id = %d AND status = 'aktywne'", $zawodnik_id));
+                            if ($current_parent) {
+                                $current_parent_id = $current_parent->rodzic_id;
+                            }
+                        }
+                        foreach ($all_parents as $parent) {
+                            echo '<option value="' . esc_attr($parent->id) . '"' . selected($current_parent_id, $parent->id, false) . '>' . esc_html($parent->email) . '</option>';
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
         </table>
         <?php submit_button($zawodnik ? 'Zapisz zmiany' : 'Dodaj zawodnika'); ?>
     </form>
