@@ -75,6 +75,7 @@ class FCM_Frontend_Admin {
                 [],
                 '3.2.1'
             );
+            wp_enqueue_style('dashicons');
 
             wp_enqueue_script('fcm-frontend-script');
 
@@ -105,44 +106,76 @@ class FCM_Frontend_Admin {
     private function render_admin_panel() {
         $current_action = $_GET['fcm_action'] ?? 'calendar'; // Domyślna akcja to kalendarz
         ?>
-        <div class="fcm-frontend-admin-tabs">
-            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'calendar')); ?>" class="button <?php echo ($current_action === 'calendar') ? 'button-primary' : ''; ?>">Kalendarz Treningów</a>
-            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'schedule')); ?>" class="button <?php echo ($current_action === 'schedule') ? 'button-primary' : ''; ?>">Harmonogram Zajęć</a>
-            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'attendance')); ?>" class="button <?php echo ($current_action === 'attendance') ? 'button-primary' : ''; ?>">Zarządzanie Obecnością</a>
-            <a href="<?php echo esc_url(add_query_arg('fcm_action', 'players')); ?>" class="button <?php echo ($current_action === 'players') ? 'button-primary' : ''; ?>">Zarządzanie Zawodnikami</a>
+        <div class="fcm-frontend-admin-wrapper">
+            <div class="fcm-sidebar-nav">
+                <div class="fcm-sidebar-header">
+                    <a href="<?php echo home_url(); ?>" class="fcm-logo-link"><img src="<?php echo FCM_PLUGIN_URL . 'assets/images/logo.png'; ?>" alt="Logo" class="fcm-logo"></a>
+                    <button class="fcm-sidebar-toggle"><span class="dashicons dashicons-menu"></span></button>
+                </div>
+                <a href="<?php echo esc_url(add_query_arg('fcm_action', 'calendar')); ?>" class="button <?php echo ($current_action === 'calendar') ? 'button-primary' : ''; ?>"><span class="dashicons dashicons-calendar-alt"></span><span class="fcm-nav-text">Kalendarz Treningów</span></a><a href="<?php echo esc_url(add_query_arg('fcm_action', 'schedule')); ?>" class="button <?php echo ($current_action === 'schedule') ? 'button-primary' : ''; ?>"><span class="dashicons dashicons-clock"></span><span class="fcm-nav-text">Harmonogram Zajęć</span></a><a href="<?php echo esc_url(add_query_arg('fcm_action', 'players_admin')); ?>" class="button <?php echo ($current_action === 'players_admin') ? 'button-primary' : ''; ?>"><span class="dashicons dashicons-groups"></span><span class="fcm-nav-text">Zawodnicy</span></a><a href="<?php echo esc_url(add_query_arg('fcm_action', 'parents_admin')); ?>" class="button <?php echo ($current_action === 'parents_admin') ? 'button-primary' : ''; ?>"><span class="dashicons dashicons-admin-users"></span><span class="fcm-nav-text">Rodzice</span></a><a href="<?php echo esc_url(add_query_arg('fcm_action', 'announcements_admin')); ?>" class="button <?php echo ($current_action === 'announcements_admin') ? 'button-primary' : ''; ?>"><span class="dashicons dashicons-megaphone"></span><span class="fcm-nav-text">Ogłoszenia</span></a><a href="<?php echo wp_logout_url(home_url()); ?>" class="button fcm-logout-button"><span class="dashicons dashicons-lock"></span><span class="fcm-nav-text">Wyloguj się</span></a>
+            </div>
+            <div class="fcm-content-area">
+                <?php
+                switch ($current_action) {
+                    case 'schedule':
+                        include FCM_PLUGIN_PATH . 'templates/frontend/trainer-schedule-admin.php';
+                        break;
+                    case 'attendance':
+                        if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-attendance.php';
+                        } elseif (isset($_GET['trening_date'])) {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-groups.php';
+                        }
+                        else {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-calendar.php';
+                        }
+                        break;
+                    case 'players': // This was for trainer's player management, keep it separate if needed, or merge.
+                        $player_action = $_GET['player_action'] ?? 'list';
+                        if ($player_action === 'edit' || $player_action === 'add') {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-player-form.php';
+                        } else {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-players-list.php';
+                        }
+                        break;
+                    case 'players_admin': // New case for admin-level player management
+                        $action = $_GET['action'] ?? 'list';
+                        if ($action === 'edit' || $action === 'add') {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-zawodnicy-form.php';
+                        }
+                        else {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-zawodnicy-list.php';
+                        }
+                        break;
+                    case 'parents_admin': // New case for admin-level parent management
+                        $action = $_GET['action'] ?? 'list';
+                        if ($action === 'pending') {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-rodzice-pending.php';
+                        } elseif ($action === 'assign') {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-rodzice-assign.php';
+                        }
+                        else {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-rodzice-list.php';
+                        }
+                        break;
+                    case 'announcements_admin': // New case for admin-level announcements
+                        include FCM_PLUGIN_PATH . 'templates/frontend/trainer-announcements.php';
+                        break;
+                    case 'calendar':
+                    default:
+                        if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
+                            include FCM_PLUGIN_PATH . 'templates/admin/treningi-attendance.php';
+                        } elseif (isset($_GET['trening_date'])) {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-groups.php';
+                        }
+                        else {
+                            include FCM_PLUGIN_PATH . 'templates/frontend/trainer-calendar.php';
+                        }
+                        break;
+                }
+                ?>
+            </div>
         </div>
         <?php
-        switch ($current_action) {
-            case 'schedule':
-                include FCM_PLUGIN_PATH . 'templates/frontend/trainer-schedule.php';
-                break;
-            case 'attendance':
-                if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
-                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-attendance.php';
-                } elseif (isset($_GET['trening_date'])) {
-                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
-                } else {
-                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';
-                }
-                break;
-            case 'players':
-                $player_action = $_GET['player_action'] ?? 'list';
-                if ($player_action === 'edit' || $player_action === 'add') {
-                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-player-form.php';
-                } else {
-                    include FCM_PLUGIN_PATH . 'templates/frontend/trainer-players-list.php';
-                }
-                break;
-            case 'calendar':
-            default:
-                if (isset($_GET['trening_date']) && isset($_GET['grupa'])) {
-                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-attendance.php';
-                } elseif (isset($_GET['trening_date'])) {
-                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-groups.php';
-                } else {
-                    include FCM_PLUGIN_PATH . 'templates/admin/treningi-calendar.php';
-                }
-                break;
-        }
     }
 }

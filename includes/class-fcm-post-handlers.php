@@ -99,9 +99,9 @@ class FCM_Post_Handlers {
         }
 
         if ($result === false) {
-            wp_redirect(add_query_arg('fcm_error', 'edit_parent_failed', admin_url('admin.php?page=fc-mistrzaki-rodzice&action=edit&rodzic_id=' . $rodzic_id)));
+            wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'action' => 'edit', 'rodzic_id' => $rodzic_id, 'fcm_error' => 'edit_parent_failed'], get_permalink()));
         } else {
-            wp_redirect(add_query_arg('fcm_notice', 'edit_parent_success', admin_url('admin.php?page=fc-mistrzaki-rodzice')));
+            wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'fcm_notice' => 'edit_parent_success'], get_permalink()));
         }
         exit;
     }
@@ -120,7 +120,7 @@ class FCM_Post_Handlers {
         $wpdb->delete($rodzice_table, ['id' => $rodzic_id]);
         $wpdb->delete($powiazania_table, ['rodzic_id' => $rodzic_id]);
 
-        wp_redirect(add_query_arg('fcm_notice', 'delete_parent_success', admin_url('admin.php?page=fc-mistrzaki-rodzice')));
+        wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'fcm_notice' => 'delete_parent_success'], get_permalink()));
         exit;
     }
 
@@ -203,7 +203,7 @@ class FCM_Post_Handlers {
 
         $wpdb->update($powiazania_table, ['status' => 'aktywne'], ['id' => $powiazanie_id]);
 
-        wp_redirect(add_query_arg('fcm_notice', 'powiazanie_approved', admin_url('admin.php?page=fc-mistrzaki-rodzice&action=pending')));
+        wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'action' => 'pending', 'fcm_notice' => 'powiazanie_approved'], get_permalink()));
         exit;
     }
 
@@ -223,9 +223,9 @@ class FCM_Post_Handlers {
 
         if ($rodzic) {
             $wpdb->insert($powiazania_table, ['rodzic_id' => $rodzic->id, 'zawodnik_id' => $zawodnik_id, 'status' => 'aktywne']);
-            wp_redirect(add_query_arg('fcm_notice', 'assign_success', admin_url('admin.php?page=fc-mistrzaki-rodzice&action=assign')));
+            wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'action' => 'assign', 'fcm_notice' => 'assign_success'], get_permalink()));
         } else {
-            wp_redirect(add_query_arg('fcm_error', 'parent_not_found', admin_url('admin.php?page=fc-mistrzaki-rodzice&action=assign')));
+            wp_redirect(add_query_arg(['fcm_action' => 'parents_admin', 'action' => 'assign', 'fcm_error' => 'parent_not_found'], get_permalink()));
         }
         exit;
     }
@@ -268,7 +268,7 @@ class FCM_Post_Handlers {
             }
         }
 
-        wp_redirect(add_query_arg('fcm_notice', ($result === false) ? 'error' : 'success', admin_url('admin.php?page=fc-mistrzaki-zawodnicy')));
+        wp_redirect(add_query_arg(['fcm_action' => 'players_admin', 'fcm_notice' => (($result === false) ? 'error' : 'success')], get_permalink()));
         exit;
     }
 
@@ -278,7 +278,7 @@ class FCM_Post_Handlers {
         global $wpdb;
         $table_name = $wpdb->prefix . 'fcm_zawodnicy';
         $result = $wpdb->delete($table_name, ['id' => $id], ['%d']);
-        wp_redirect(add_query_arg('fcm_notice', ($result === false) ? 'delete_error' : 'delete_success', admin_url('admin.php?page=fc-mistrzaki-zawodnicy')));
+        wp_redirect(add_query_arg(['fcm_action' => 'players_admin', 'fcm_notice' => (($result === false) ? 'delete_error' : 'delete_success')], get_permalink()));
         exit;
     }
 
@@ -292,7 +292,7 @@ class FCM_Post_Handlers {
         $checked_players = isset($_POST['obecnosc']) ? array_map('intval', (array)$_POST['obecnosc']) : [];
         
         if(empty($displayed_players)) {
-            wp_redirect(admin_url('admin.php?page=fc-mistrzaki'));
+            wp_redirect(add_query_arg(['fcm_action' => 'attendance'], get_permalink()));
             exit;
         }
 
@@ -328,7 +328,7 @@ class FCM_Post_Handlers {
 
         // Jeśli z jakiegoś powodu referer jest pusty, ustawiamy domyślny URL admina
         if (!$redirect_url) {
-            $redirect_url = admin_url('admin.php?page=fc-mistrzaki&trening_date=' . $data_treningu . '&grupa=' . sanitize_key($_POST['grupa']));
+            $redirect_url = add_query_arg(['fcm_action' => 'attendance', 'trening_date' => $data_treningu, 'grupa' => sanitize_key($_POST['grupa'])], get_permalink());
         }
 
         // Czyścimy stare parametry powiadomień, aby się nie dublowały

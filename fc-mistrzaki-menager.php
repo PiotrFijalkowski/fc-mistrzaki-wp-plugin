@@ -37,7 +37,7 @@ class FC_Mistrzaki_Manager_Main {
     private function load_dependencies() {
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-db.php';
         require_once FCM_PLUGIN_PATH . 'includes/helpers.php';
-        require_once FCM_PLUGIN_PATH . 'includes/class-fcm-admin.php';
+        
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-post-handlers.php';
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-shortcode.php';
         require_once FCM_PLUGIN_PATH . 'includes/class-fcm-frontend-admin.php'; 
@@ -49,7 +49,7 @@ class FC_Mistrzaki_Manager_Main {
         
         add_action('init', [$this, 'start_session'], 1);
 
-        new FCM_Admin();
+        
         new FCM_Post_Handlers();
         new FCM_Shortcode();
         new FCM_Frontend_Admin();

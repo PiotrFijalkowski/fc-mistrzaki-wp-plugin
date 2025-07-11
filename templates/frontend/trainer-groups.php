@@ -1,5 +1,5 @@
 <?php
-// Plik: templates/admin/treningi-groups.php
+// Plik: templates/frontend/trainer-groups.php
 
 if (!defined('ABSPATH')) exit;
 $date = sanitize_text_field($_GET['trening_date']);

@@ -7,14 +7,15 @@
 .fcm-parent-panel {
     display: flex;
     font-family: $font-family-base;
-    max-width: 1200px; /* Zwiększona szerokość dla układu z sidebarem */
-    margin: 30px auto;
-    background-color: $background-color;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    padding: 0; /* Usunięty padding z głównego kontenera */
+    width: 100%; /* Full width */
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px)); /* Full height, adjusted for admin bar */
+    margin: 0; /* Remove margin */
+    background-color: transparent; /* No background color */
+    border-radius: 0; /* No border radius */
+    box-shadow: none; /* No box shadow */
+    padding: 0; /* No padding */
     color: $text-color;
-    overflow: hidden; /* Ważne dla zaokrąglonych rogów */
+    overflow: hidden; /* Important for rounded corners */
 
     h3 {
         color: $primary-color;
@@ -479,19 +480,419 @@ box-shadow: inset 0 4px 8px rgba(51, 51, 51, 0.6);
     }
 }
 
-.fcm-tab-content {
-    display: none;
+.fcm-form-group {
+    margin-bottom: $spacing-unit;
 
-    &.active {
+    label {
         display: block;
+        margin-bottom: $spacing-unit / 2;
+        font-weight: bold;
+        color: $light-text-color;
     }
 
-    h2 {
-        color: $secondary-color;
-        font-size: 22px;
-        margin-top: 0;
-        margin-bottom: $spacing-unit * 1.5;
-        text-align: center;
+    .fcm-form-control {
+        width: 100%;
+        padding: $spacing-unit / 1.2;
+        border: 1px solid $border-color;
+        border-radius: $border-radius / 2;
+        font-size: $font-size-base;
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+            border-color: lighten($primary-color, 15%);
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+    }
+}
+
+.fcm-button {
+    display: block;
+    width: 100%;
+    padding: $spacing-unit;
+    border: none;
+    border-radius: $border-radius / 2;
+    font-size: $font-size-large;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &-primary {
+        background-color: $primary-color;
+        color: #ffffff;
+
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
+    }
+}
+
+.fcm-error-message {
+    color: $error-color;
+    background-color: lighten($error-color, 40%);
+    border: 1px solid $error-color;
+    padding: $spacing-unit / 2;
+    border-radius: $border-radius / 2;
+    margin-bottom: $spacing-unit;
+    text-align: center;
+}
+
+.fcm-success-message {
+    color: $success-color;
+    background-color: lighten($success-color, 40%);
+    border: 1px solid $success-color;
+    padding: $spacing-unit / 2;
+    border-radius: $border-radius / 2;
+    margin-bottom: $spacing-unit;
+    text-align: center;
+}
+
+.fcm-frontend-admin-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* No gap */
+    background-color: transparent; /* No background color */
+    border-radius: 0; /* No border radius */
+    box-shadow: none; /* No box shadow */
+    padding: 0; /* No padding */
+    height: calc(100vh - var(--wp-admin--admin-bar--height, 32px)); /* Adjusted height for admin bar */
+}
+
+.fcm-sidebar-nav {
+    flex: 0 0 20%; /* Changed to 20% */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Added align-items center */
+    justify-content: center; /* Added justify-content center */
+    gap: 0; /* Remove gap between buttons, padding will handle spacing */
+    padding: 0; /* No padding inside the sidebar */
+    background-color: $sidebar-bg-color; /* Set sidebar background color */
+    border-radius: 0; /* No border radius */
+    // Remove box-shadow from here, it's on the wrapper
+}
+
+.fcm-sidebar-nav .button {
+    width: 100%;
+    text-align: right; /* Changed to right */
+    justify-content: center; /* Changed to center */
+    background-color: transparent; // Default transparent background
+    color: $white-text; // White text for all buttons
+    border: none; // No border by default
+    padding: 20px; // Adjusted padding
+    border-radius: 0; // No border-radius for individual buttons, as they span full width
+    font-weight: 700; // Font weight 700 for regular buttons
+    transition: all 0.2s ease-in-out; // Smooth transition
+    font-family: $font-family-base; // Ensure Montserrat is used
+    line-height: 1.5; // Adjust line-height for better vertical alignment
+    text-transform: uppercase; /* Added text-transform uppercase */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Added text shadow */
+}
+
+.fcm-sidebar-nav .button:hover {
+    background-color: $sidebar-active-hover-bg-color; // Darker background on hover
+    color: $white-text; // White text on hover
+    border: none; // No border on hover
+    box-sizing: border-box; // Include padding and border in the element's total width and height
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* Added inset box shadow */
+}
+
+.fcm-sidebar-nav .button.button-primary {
+    background-color: $sidebar-active-hover-bg-color; // Darker background for active button
+    color: $white-text; // White text for active button
+    font-weight: 900; // Font weight 900 for active button
+    border: none; // No border for active button
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); // Add inset box shadow for active button
+    box-sizing: border-box; // Include padding and border in the element's total width and height
+}
+
+.fcm-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.fcm-logo {
+    max-width: 100px;
+    height: auto;
+}
+
+.fcm-sidebar-toggle {
+    background: none;
+    border: none;
+    color: $white-text;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.3s ease;
+}
+
+.fcm-sidebar-nav.collapsed {
+    flex: 0 0 60px;
+    width: 60px;
+    overflow: hidden;
+
+    .fcm-logo {
+        max-width: 40px;
+        opacity: 0; // Hide logo when collapsed
+        transition: opacity 0.3s ease; // Smooth transition
+    }
+
+    .fcm-nav-text {
+        display: none;
+    }
+
+    .button {
+        justify-content: center;
+        padding: 15px 0;
+        text-align: center; // Center text when collapsed
+    }
+
+    .dashicons {
+        margin-right: 0;
+    }
+
+    .fcm-sidebar-toggle {
+        transform: rotate(180deg);
+    }
+}
+
+.fcm-nav-text {
+    margin-left: 10px;
+}
+
+.fcm-logo-link {
+    display: block;
+    text-align: center;
+    padding: 15px;
+}
+
+.fcm-content-area {
+    flex: 1; // Takes remaining space
+    padding: 50px; // Consistent padding
+    background-color: $card-background; // White background for content area
+    border-radius: $border-radius;
+    display: flex; /* Added display flex */
+    align-items: center; /* Added align-items center */
+    max-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px)); /* Set max-height, adjusted for admin bar */
+    overflow: auto; /* Add scroll if content overflows */
+    // No explicit border or shadow here, as it's part of the main wrapper's shadow
+}
+
+.fcm-content-area > .wrap {
+    width: 100%; /* Added width 100% */
+    height: 100%; /* Added height 100% */
+    overflow: auto; /* Added overflow auto */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .fcm-frontend-admin-wrapper {
+        flex-direction: column;
+        padding: $spacing-unit; // Less padding on small screens
+    }
+
+    .fcm-sidebar-nav {
+        flex: none;
+        width: 100%;
+        flex-direction: row; /* Buttons in a row on smaller screens */
+        overflow-x: auto; /* Enable horizontal scrolling if buttons overflow */
+        white-space: nowrap;
+        padding-bottom: $spacing-unit / 2;
+        padding-top: $spacing-unit / 2; // Add some top padding
+        gap: $spacing-unit / 2; // Add gap back for horizontal layout
+    }
+
+    .fcm-sidebar-nav .button {
+        flex: 0 0 auto; /* Allow buttons to shrink/grow as needed */
+        width: auto;
+        padding: $spacing-unit / 1.5 $spacing-unit; // Adjusted padding for small screens
+        border-radius: $border-radius / 2; // Re-add border-radius for small screens
+    }
+
+    .fcm-content-area {
+        padding: $spacing-unit; // Less padding on small screens
+    }
+}
+
+.fcm-group-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); // Responsive grid
+    gap: $spacing-unit;
+    margin-top: $spacing-unit * 1.5;
+}
+
+.fcm-group-card {
+    background-color: $card-background;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.fcm-group-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-unit * 2;
+    text-decoration: none;
+    color: $primary-color;
+    font-size: $font-size-large + 2px;
+    font-weight: 600;
+    height: 100%; // Ensure link fills the card
+    width: 100%; // Ensure link fills the card
+    text-align: center;
+}
+
+/* Modal styles (from previous step, ensure they are here) */
+.fcm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none; // Domyślnie ukryty
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  &.is-visible {
+      display: flex; // Pokazujemy, gdy ma klasę
+  }
+}
+
+.fcm-modal-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.fcm-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+
+  h3 {
+      margin: 0;
+      font-size: 18px;
+  }
+}
+
+.fcm-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 5px;
+}
+
+.fcm-modal-body {
+  .grupy-selection {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      a.button {
+          text-align: center;
+          text-decoration: none;
+          font-size: 18px;
+          font-weight: 700;
+      }
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.next-prev {
+  padding: 5px 25px;
+    a {
+      font-weight: 700;
+      font-size: 20px;
+      text-decoration: none!important;
+    }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.calendar-title {
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: 700;
+  text-transform: capitalize;
+}
+
+.m100 {
+  margin: 100px 0px;
+}
+
+/* Auth forms styling */
+.fcm-auth-container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: $spacing-unit;
+    background-color: $background-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+}
+
+.fcm-auth-card {
+    background-color: $card-background;
+    padding: $spacing-unit * 2;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.fcm-auth-tabs {
+    display: flex;
+    margin-bottom: $spacing-unit * 1.5;
+    border-bottom: 1px solid $border-color;
+
+    .fcm-tab-button {
+        flex: 1;
+        padding: $spacing-unit / 1.2 $spacing-unit;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: $font-size-large;
+        color: $light-text-color;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+
+        &:hover {
+            color: $primary-color;
+        }
+
+        &.active {
+            color: $primary-color;
+            border-bottom-color: $primary-color;
+            font-weight: bold;
+        }
     }
 }
 
